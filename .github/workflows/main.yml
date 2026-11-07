@@ -6,29 +6,39 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
     - uses: actions/checkout@v4
 
-    - name: Get Date
-      id: get-date
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+
+    - name: Set up JDK 17 (Android için Gerekli)
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Sistem Bağımlılıklarını Kur
       run: |
-        echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
+        sudo apt-get update
+        sudo apt-get install -y build-essential ccache git libffi-dev libssl-dev dirmngr \
+          zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev libsqlite3-dev libreadline-dev \
+          uuid-dev python3-dev python3-pip zip unzip openjdk-17-jdk
 
-    - name: Cache Buildozer Core
-      uses: actions/cache@v4
-      with:
-        path: ~/.buildozer
-        key: ${{ runner.os }}-buildozer-${{ steps.get-date.outputs.date }}
+    - name: Buildozer ve Cython Kur
+      run: |
+        pip install --upgrade pip
+        pip install buildozer cython==0.29.33
 
-    - name: Build with Buildozer
-      uses: ArtemSBulgakov/buildozer-action@v1
-      with:
-        workdir: .
-        buildozer_version: stable
+    - name: Buildozer ile APK Üret
+      run: |
+        yes | buildozer -v android debug
 
-    - name: Upload APK
+    - name: APK Dosyasını Çıkart (Upload)
       uses: actions/upload-artifact@v4
       with:
         name: package
