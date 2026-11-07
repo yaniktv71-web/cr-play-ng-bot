@@ -36,3 +36,4 @@ android.api = 33
 
 # (int) Minimum API your APK will support.
 android.minapi = 21
+requirements = python3==3.11.5,kivy
