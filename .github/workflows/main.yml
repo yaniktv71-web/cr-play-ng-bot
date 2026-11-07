@@ -17,7 +17,7 @@ jobs:
         python-version: '3.10'
 
     - name: Set up JDK 17 (Android için Gerekli)
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v5
       with:
         distribution: 'temurin'
         java-version: '17'
@@ -34,14 +34,10 @@ jobs:
         pip install --upgrade pip
         pip install buildozer cython==0.29.33
 
-    - name: Android Lisanslarını Otomatik Onayla
-      run: |
-        mkdir -p ~/.buildozer/android/platform/android-sdk/licenses
-        echo -e "\n24436f477b4692f8673414e259e51f543ea381fc\n504667f4c0de7af1a06de9f4b1727b84351f291d\n2714b1168736a66ab1646ee7f99b721ea7e314e5" > ~/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-
     - name: Buildozer ile APK Üret
       run: |
-        buildozer -v android debug
+        # yes | komutu, arka planda çıkacak tüm Android sözleşmelerini otomatik onaylar
+        yes | buildozer -v android debug
 
     - name: APK Dosyasını Çıkart (Upload)
       uses: actions/upload-artifact@v4
