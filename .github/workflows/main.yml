@@ -1,5 +1,4 @@
 name: Build APK
-
 on:
   push:
     branches: [ main ]
@@ -7,10 +6,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
 
     - name: Get Date
       id: get-date
@@ -18,19 +17,19 @@ jobs:
         echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_OUTPUT
 
     - name: Cache Buildozer Core
-      uses: actions/cache@v3
+      uses: actions/cache@v4
       with:
         path: ~/.buildozer
         key: ${{ runner.os }}-buildozer-${{ steps.get-date.outputs.date }}
 
     - name: Build with Buildozer
-      uses: ArtemGovorov/buildozer-action@v1
+      uses: ArtemSBulgakov/buildozer-action@v3
       with:
         workdir: .
         buildozer_version: master
 
     - name: Upload APK
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: package
         path: bin/*.apk
