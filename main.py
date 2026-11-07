@@ -24,7 +24,7 @@ while True:
      @@@@@
      @@@@@
   @@@@@ @@@@@
- @@@@@@ @@@@@@
+ @@@@@@  @@@@@@
   @@@@@ @@@@@""")
         input("\nMenüye dönmek için Enter'a basın...")
         ekrani_temizle()
